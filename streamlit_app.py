@@ -35,8 +35,9 @@ if st.button('예상배달시간 계산', disabled=st.session_state['calculation
 
 # Countdown display
 countdown_container = st.empty()  # Create a placeholder for countdown
+return_time_container = st.empty()  # Create a placeholder for return time
 
-# Function to update countdown
+# Function to update countdown and return time
 def update_countdown():
     while True:
         current_time = datetime.now(pytz.timezone('Asia/Seoul'))
@@ -53,12 +54,21 @@ def update_countdown():
                          {minutes:02} minutes, {seconds:02} seconds 안에 매장 복귀합니다
                     </div>
                 """, unsafe_allow_html=True)
+
+                # Calculate the expected return time in KST
+                return_time_kst = st.session_state['completion_time'].strftime('%Y-%m-%d %H:%M:%S')
+                return_time_container.markdown(f"""
+                    <div style="font-size: 36px; text-align: center; color: black;">
+                        예상 복귀 시간: {return_time_kst} KST
+                    </div>
+                """, unsafe_allow_html=True)
             else:
                 countdown_container.markdown(f"""
                     <div style="font-size: 48px; text-align: center; color: #FF5733; font-weight: bold;">
                         곧 복귀합니다!
                     </div>
                 """, unsafe_allow_html=True)
+                return_time_container.empty()  # Clear return time when the countdown is over
                 break  # Exit the loop if time is up
 
         time.sleep(1)  # Wait for 1 second before the next update

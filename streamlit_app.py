@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 import pytz
 import time
 
-st.set_page_config(page_title='배달 예상시간 계산기                 ')
+st.set_page_config(page_title='배달 예상시간 계산기_________________________________')
 
 # Title for the app
 st.title('라이더 배달 예상시간 계산기')

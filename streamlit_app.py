@@ -4,7 +4,7 @@ import pytz
 import time
 
 # Title for the app
-st.title('Delivery Time Calculator')
+st.title('라이더 배달 예상시간 계산기')
 
 # Create a state variable to store the completion time (initially None)
 if 'completion_time' not in st.session_state:
@@ -17,7 +17,7 @@ num_deliveries = st.number_input('Enter number of deliveries:', min_value=0)
 # Calculate total time
 total_time = nav_time + (5 * num_deliveries)
 
-if st.button('Calculate Delivery Completion Time'):
+if st.button('예상배달시간 계산'):
     current_time_utc = datetime.now(pytz.utc)
     kst = pytz.timezone('Asia/Seoul')
     current_time_kst = current_time_utc.astimezone(kst)
@@ -42,13 +42,13 @@ def update_countdown():
                 # Display the countdown
                 countdown_container.markdown(f"""
                     <div style="font-size: 48px; text-align: center; color: #FF5733; font-weight: bold;">
-                        I will be back in {hours:02} hours, {minutes:02} minutes, {seconds:02} seconds
+                         {minutes:02} minutes, {seconds:02} seconds 안에 매장 복귀합니다
                     </div>
                 """, unsafe_allow_html=True)
             else:
                 countdown_container.markdown(f"""
                     <div style="font-size: 48px; text-align: center; color: #FF5733; font-weight: bold;">
-                        I am back now!
+                        곧 복귀합니다!
                     </div>
                 """, unsafe_allow_html=True)
                 break  # Exit the loop if time is up

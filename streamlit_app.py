@@ -29,11 +29,11 @@ if st.button('Calculate Delivery Completion Time'):
     # Calculate the completion time by adding the total time to the current time in KST
     completion_time_kst = current_time_kst + timedelta(minutes=total_time)
 
-    # Store the completion time in session state
+    # Store the completion time in session state as a datetime object
     st.session_state['completion_time'] = completion_time_kst
 
-# If a completion time exists, display a countdown
-if st.session_state['completion_time']:
+# If a completion time exists and is a valid datetime object, display the countdown
+if isinstance(st.session_state['completion_time'], datetime):
     countdown_container = st.empty()
 
     while True:

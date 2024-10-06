@@ -1,7 +1,6 @@
 import streamlit as st
 from datetime import datetime, timedelta
 import pytz
-import time
 import os
 
 # File to store messages
@@ -59,24 +58,23 @@ if messages:
         st.markdown(f"> {msg.strip()}")
 
 # Countdown functionality
-if 'completion_time' in st.session_state:
+if 'completion_time' in st.session_state and st.session_state['completion_time'] is not None:
     countdown_container = st.empty()
-    while True:
-        current_time = datetime.now(pytz.timezone('Asia/Seoul'))
-        time_remaining = st.session_state['completion_time'] - current_time
-        if time_remaining.total_seconds() > 0:
-            hours, remainder = divmod(time_remaining.seconds, 3600)
-            minutes, seconds = divmod(remainder, 60)
-            countdown_container.markdown(f"""
-                <div style="font-size: 48px; text-align: center; color: #FF5733; font-weight: bold;">
-                    I will be back in {hours:02}:{minutes:02}:{seconds:02}
-                </div>
-            """, unsafe_allow_html=True)
-            time.sleep(1)
-        else:
-            countdown_container.markdown(f"""
-                <div style="font-size: 48px; text-align: center; color: #FF5733; font-weight: bold;">
-                    I am back now!
-                </div>
-            """, unsafe_allow_html=True)
-            break
+    
+    current_time = datetime.now(pytz.timezone('Asia/Seoul'))
+    time_remaining = st.session_state['completion_time'] - current_time
+
+    if time_remaining.total_seconds() > 0:
+        hours, remainder = divmod(time_remaining.seconds, 3600)
+        minutes, seconds = divmod(remainder, 60)
+        countdown_container.markdown(f"""
+            <div style="font-size: 48px; text-align: center; color: #FF5733; font-weight: bold;">
+                I will be back in {hours:02}:{minutes:02}:{seconds:02}
+            </div>
+        """, unsafe_allow_html=True)
+    else:
+        countdown_container.markdown(f"""
+            <div style="font-size: 48px; text-align: center; color: #FF5733; font-weight: bold;">
+                I am back now!
+            </div>
+        """, unsafe_allow_html=True)

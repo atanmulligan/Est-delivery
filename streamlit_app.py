@@ -11,8 +11,8 @@ if 'completion_time' not in st.session_state:
     st.session_state['completion_time'] = None
 
 # Input fields for total delivery navigation time and number of deliveries
-nav_time = st.number_input('Enter total delivery navigation time (in minutes):', min_value=0)
-num_deliveries = st.number_input('Enter number of deliveries:', min_value=0)
+nav_time = st.number_input('네비시간입력 (in minutes):', min_value=0)
+num_deliveries = st.number_input('배달 총 개수:', min_value=0)
 
 # Calculate total time
 total_time = nav_time + (5 * num_deliveries)

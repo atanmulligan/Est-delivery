@@ -1,4 +1,5 @@
 import streamlit as st
+from datetime import datetime, timedelta
 
 # Title for the app
 st.title('Delivery Time Calculator')
@@ -8,15 +9,15 @@ nav_time = st.number_input('Enter total delivery navigation time (in minutes):',
 num_deliveries = st.number_input('Enter number of deliveries:', min_value=0)
 
 # Formula: total_time = nav_time + (5 * num_deliveries)
-if st.button('Calculate Total Time'):
+if st.button('Calculate Delivery Completion Time'):
     total_time = nav_time + (5 * num_deliveries)
     
-    # Display the total time result
+    # Get current time
+    current_time = datetime.now()
+
+    # Calculate the completion time by adding the total time to the current time
+    completion_time = current_time + timedelta(minutes=total_time)
+    
+    # Display the total time result and the delivery completion time (formatted without seconds or year)
     st.write(f'Total time needed for deliveries: {total_time} minutes')
-
-import streamlit as st
-
-st.title("🎈 My new app")
-st.write(
-    "Let's start building! For help and inspiration, head over to [docs.streamlit.io](https://docs.streamlit.io/)."
-)
+    st.write(f'Deliveries will be completed by: {completion_time.strftime("%I:%M %p on %B %d")}')

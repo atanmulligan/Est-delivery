@@ -36,13 +36,12 @@ def update_countdown():
             time_remaining = st.session_state['completion_time'] - current_time
             
             if time_remaining.total_seconds() > 0:
-                hours, remainder = divmod(time_remaining.seconds, 3600)
-                minutes, seconds = divmod(remainder, 60)
+                minutes, seconds = divmod(time_remaining.seconds, 60)
 
                 # Display the countdown
                 countdown_container.markdown(f"""
                     <div style="font-size: 48px; text-align: center; color: #FF5733; font-weight: bold;">
-                        I will be back in {hours:02} hours, {minutes:02} minutes, {seconds:02} seconds
+                        I will be back in {minutes:02} minutes, {seconds:02} seconds
                     </div>
                 """, unsafe_allow_html=True)
             else:
@@ -52,6 +51,14 @@ def update_countdown():
                     </div>
                 """, unsafe_allow_html=True)
                 break  # Exit the loop if time is up
+
+        # Get the completion time in KST for display
+        completion_time_kst_str = st.session_state['completion_time'].strftime('%Y-%m-%d %H:%M:%S')
+        countdown_container.markdown(f"""
+            <div style="font-size: 24px; text-align: center; color: #555;">
+                Completion Time (KST): {completion_time_kst_str}
+            </div>
+        """, unsafe_allow_html=True)
 
         time.sleep(1)  # Wait for 1 second before the next update
 

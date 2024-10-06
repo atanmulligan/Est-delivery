@@ -18,7 +18,7 @@ def read_messages():
 # Function to write a new message to the file
 def write_message(msg):
     with open(MESSAGE_FILE, 'a') as f:
-        f.write(f"{datetime.now(pytz.utc).isoformat()}: {msg}\n")
+        f.write(f"{msg}\n")  # Write only the message content
 
 # Function to reset messages
 def reset_messages():
@@ -66,7 +66,7 @@ def display_messages():
     message_placeholder.markdown("### Messages")
     if messages:
         for msg in messages:
-            message_placeholder.markdown(f"> {msg.strip()}")
+            message_placeholder.markdown(f"> {msg.strip()}")  # Show only the message content
     else:
         message_placeholder.markdown("No messages yet.")
 

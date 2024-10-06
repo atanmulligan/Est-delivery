@@ -5,6 +5,7 @@ import os
 
 # File to store messages
 MESSAGE_FILE = 'messages.txt'
+ADMIN_PASSWORD = 'admin'  # Predefined admin password
 
 # Function to read messages from the file
 def read_messages():
@@ -17,6 +18,11 @@ def read_messages():
 def write_message(msg):
     with open(MESSAGE_FILE, 'a') as f:
         f.write(f"{datetime.now(pytz.utc).isoformat()}: {msg}\n")
+
+# Function to reset messages
+def reset_messages():
+    if os.path.exists(MESSAGE_FILE):
+        os.remove(MESSAGE_FILE)
 
 # Title for the app
 st.title('Delivery Time Calculator and Chat Feature')
@@ -49,7 +55,6 @@ if st.button('Send'):
     if message:
         write_message(message)  # Save message to file
         st.success("Message sent!")  # Optional feedback for the user
-        # No need to call experimental_rerun here; simply re-display messages below
 
 # Display chat messages
 st.subheader('Messages')
@@ -79,3 +84,15 @@ if 'completion_time' in st.session_state and st.session_state['completion_time']
                 I am back now!
             </div>
         """, unsafe_allow_html=True)
+
+# Admin functionality to reset messages
+st.subheader('Admin Control')
+
+admin_password = st.text_input("Enter admin password to reset messages:", type='password')
+
+if st.button('Reset Messages'):
+    if admin_password == ADMIN_PASSWORD:
+        reset_messages()
+        st.success("Messages have been reset!")
+    else:
+        st.error("Incorrect password. Access denied.")

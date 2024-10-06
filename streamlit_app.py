@@ -21,10 +21,13 @@ if 'calculation_done' not in st.session_state:
 nav_time = st.number_input('네비시간입력 (in minutes):', min_value=0, disabled=st.session_state['calculation_done'])
 num_deliveries = st.number_input('배달 총 개수:', min_value=0, disabled=st.session_state['calculation_done'])
 
-# Calculate total time and handle button click
-total_time = nav_time + (5 * num_deliveries)  # Calculate total time
+# Calculate total time only if calculation has not been done
+if not st.session_state['calculation_done']:
+    total_time = nav_time + (5 * num_deliveries)  # Calculate total time only if not done
+else:
+    total_time = 0  # Set to 0 after calculation
 
-if st.button('예상배달시간 계산'):
+if st.button('예상배달시간 계산', disabled=st.session_state['calculation_done']):
     current_time_utc = datetime.now(pytz.utc)
     kst = pytz.timezone('Asia/Seoul')
     current_time_kst = current_time_utc.astimezone(kst)

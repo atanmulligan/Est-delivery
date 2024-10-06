@@ -23,7 +23,6 @@ if st.button('예상배달시간 계산'):
     current_time_kst = current_time_utc.astimezone(kst)
     completion_time_kst = current_time_kst + timedelta(minutes=total_time)
     st.session_state['completion_time'] = completion_time_kst
-    st.success("Completion time calculated!")  # Optional feedback for the user
 
 # Countdown display
 countdown_container = st.empty()  # Create a placeholder for countdown

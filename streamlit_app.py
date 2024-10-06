@@ -44,6 +44,16 @@ def update_countdown():
                         I will be back in {minutes:02} minutes, {seconds:02} seconds
                     </div>
                 """, unsafe_allow_html=True)
+
+                # Display total time remaining in a separate line
+                total_time_remaining = timedelta(minutes=nav_time) + timedelta(seconds=(5 * num_deliveries))
+                total_minutes, total_seconds = divmod(total_time_remaining.seconds, 60)
+                
+                countdown_container.markdown(f"""
+                    <div style="font-size: 24px; text-align: center; color: #555;">
+                        Total Time Remaining: {total_minutes:02} minutes, {total_seconds:02} seconds
+                    </div>
+                """, unsafe_allow_html=True)
             else:
                 countdown_container.markdown(f"""
                     <div style="font-size: 48px; text-align: center; color: #FF5733; font-weight: bold;">
@@ -52,13 +62,13 @@ def update_countdown():
                 """, unsafe_allow_html=True)
                 break  # Exit the loop if time is up
 
-        # Get the completion time in KST for display
-        completion_time_kst_str = st.session_state['completion_time'].strftime('%Y-%m-%d %H:%M:%S')
-        countdown_container.markdown(f"""
-            <div style="font-size: 24px; text-align: center; color: #555;">
-                Completion Time (KST): {completion_time_kst_str}
-            </div>
-        """, unsafe_allow_html=True)
+            # Get the completion time in KST for display
+            completion_time_kst_str = st.session_state['completion_time'].strftime('%Y-%m-%d %H:%M:%S')
+            countdown_container.markdown(f"""
+                <div style="font-size: 24px; text-align: center; color: #555;">
+                    Completion Time (KST): {completion_time_kst_str}
+                </div>
+            """, unsafe_allow_html=True)
 
         time.sleep(1)  # Wait for 1 second before the next update
 

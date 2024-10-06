@@ -45,4 +45,11 @@ if st.button('Calculate Delivery Completion Time'):
     
     # Display the total time result and the delivery completion time (formatted without seconds or year)
     st.write(f'Total time needed for deliveries (including adjustments): {total_time} minutes')
-    st.write(f'Deliveries will be completed by: {completion_time_kst.strftime("%I:%M %p on %B %d")} KST')
+
+    # Format the completion time as a large noticeable clock using markdown and CSS
+    completion_time_formatted = completion_time_kst.strftime("%I:%M %p on %B %d")
+    st.markdown(f"""
+        <div style="font-size: 48px; text-align: center; color: #FF5733; font-weight: bold;">
+            Deliveries will be completed by: {completion_time_formatted} KST
+        </div>
+    """, unsafe_allow_html=True)

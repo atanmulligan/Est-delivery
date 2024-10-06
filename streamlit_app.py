@@ -8,13 +8,25 @@ st.title('Delivery Time Calculator')
 # Default admin password (for demonstration purposes, you may want to store this securely)
 ADMIN_PASSWORD = "admin"
 
-# Input fields for total delivery navigation time and number of deliveries
-nav_time = st.number_input('Enter total delivery navigation time (in minutes):', min_value=0)
-num_deliveries = st.number_input('Enter number of deliveries:', min_value=0)
-
 # Create a state variable to store time adjustment (initially 0)
 if 'time_adjustment' not in st.session_state:
     st.session_state['time_adjustment'] = 0
+
+# Create a state variable to store the completion time (initially None)
+if 'completion_time' not in st.session_state:
+    st.session_state['completion_time'] = None
+
+# If a completion time exists, display it at the top
+if st.session_state['completion_time']:
+    st.markdown(f"""
+        <div style="font-size: 48px; text-align: center; color: #FF5733; font-weight: bold;">
+            Deliveries will be completed by: {st.session_state['completion_time']} KST
+        </div>
+    """, unsafe_allow_html=True)
+
+# Input fields for total delivery navigation time and number of deliveries
+nav_time = st.number_input('Enter total delivery navigation time (in minutes):', min_value=0)
+num_deliveries = st.number_input('Enter number of deliveries:', min_value=0)
 
 # Section for admin to adjust the total time
 st.subheader("Admin Time Adjustment")
@@ -42,14 +54,12 @@ if st.button('Calculate Delivery Completion Time'):
 
     # Calculate the completion time by adding the total time to the current time in KST
     completion_time_kst = current_time_kst + timedelta(minutes=total_time)
-    
-    # Display the total time result and the delivery completion time (formatted without seconds or year)
+
+    # Format the completion time and store it in the session state
+    completion_time_formatted = completion_time_kst.strftime("%I:%M %p on %B %d")
+    st.session_state['completion_time'] = completion_time_formatted
+
+    # Display the total time result
     st.write(f'Total time needed for deliveries (including adjustments): {total_time} minutes')
 
-    # Format the completion time as a large noticeable clock using markdown and CSS
-    completion_time_formatted = completion_time_kst.strftime("%I:%M %p on %B %d")
-    st.markdown(f"""
-        <div style="font-size: 48px; text-align: center; color: #FF5733; font-weight: bold;">
-            Deliveries will be completed by: {completion_time_formatted} KST
-        </div>
-    """, unsafe_allow_html=True)
+# If a completion time exists, it will automatically be displayed at the top as well

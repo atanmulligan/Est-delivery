@@ -1,6 +1,7 @@
 import streamlit as st
 from datetime import datetime, timedelta
 import pytz
+import time
 
 # Title for the app
 st.title('Delivery Time Calculator')
@@ -8,14 +9,6 @@ st.title('Delivery Time Calculator')
 # Create a state variable to store the completion time (initially None)
 if 'completion_time' not in st.session_state:
     st.session_state['completion_time'] = None
-
-# If a completion time exists, display it at the top
-if st.session_state['completion_time']:
-    st.markdown(f"""
-        <div style="font-size: 48px; text-align: center; color: #FF5733; font-weight: bold;">
-            Deliveries will be completed by: {st.session_state['completion_time']} KST
-        </div>
-    """, unsafe_allow_html=True)
 
 # Input fields for total delivery navigation time and number of deliveries
 nav_time = st.number_input('Enter total delivery navigation time (in minutes):', min_value=0)
@@ -36,11 +29,38 @@ if st.button('Calculate Delivery Completion Time'):
     # Calculate the completion time by adding the total time to the current time in KST
     completion_time_kst = current_time_kst + timedelta(minutes=total_time)
 
-    # Format the completion time and store it in the session state
-    completion_time_formatted = completion_time_kst.strftime("%I:%M %p on %B %d")
-    st.session_state['completion_time'] = completion_time_formatted
+    # Store the completion time in session state
+    st.session_state['completion_time'] = completion_time_kst
 
-    # Display the total time result
-    st.write(f'Total time needed for deliveries: {total_time} minutes')
+# If a completion time exists, display a countdown
+if st.session_state['completion_time']:
+    countdown_container = st.empty()
 
-# If a completion time exists, it will automatically be displayed at the top as well
+    while True:
+        # Get the current time
+        current_time = datetime.now(pytz.timezone('Asia/Seoul'))
+
+        # Calculate the difference between completion time and current time
+        time_remaining = st.session_state['completion_time'] - current_time
+
+        if time_remaining.total_seconds() > 0:
+            # Extract hours, minutes, and seconds from the remaining time
+            hours, remainder = divmod(time_remaining.seconds, 3600)
+            minutes, seconds = divmod(remainder, 60)
+
+            # Display the countdown in the desired format
+            countdown_container.markdown(f"""
+                <div style="font-size: 48px; text-align: center; color: #FF5733; font-weight: bold;">
+                    I will be back in {hours:02}:{minutes:02}:{seconds:02} (HH:MM:SS)
+                </div>
+            """, unsafe_allow_html=True)
+
+            # Sleep for 1 second before updating the countdown
+            time.sleep(1)
+        else:
+            countdown_container.markdown(f"""
+                <div style="font-size: 48px; text-align: center; color: #FF5733; font-weight: bold;">
+                    I am back now!
+                </div>
+            """, unsafe_allow_html=True)
+            break

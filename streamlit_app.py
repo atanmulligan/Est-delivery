@@ -22,19 +22,15 @@ nav_time = st.number_input('네비시간입력 (in minutes):', min_value=0, disa
 num_deliveries = st.number_input('배달 총 개수:', min_value=0, disabled=st.session_state['calculation_done'])
 
 # Calculate total time and handle button click
-if st.session_state['calculation_done']:
-    total_time = nav_time + (5 * num_deliveries)  # Calculate total time only if done
-else:
-    total_time = nav_time + (5 * num_deliveries)  # Calculate total time before button is clicked
+total_time = nav_time + (5 * num_deliveries)  # Calculate total time
 
-if not st.session_state['calculation_done']:
-    if st.button('예상배달시간 계산'):
-        current_time_utc = datetime.now(pytz.utc)
-        kst = pytz.timezone('Asia/Seoul')
-        current_time_kst = current_time_utc.astimezone(kst)
-        completion_time_kst = current_time_kst + timedelta(minutes=total_time)
-        st.session_state['completion_time'] = completion_time_kst
-        st.session_state['calculation_done'] = True  # Set calculation done to True
+if st.button('예상배달시간 계산'):
+    current_time_utc = datetime.now(pytz.utc)
+    kst = pytz.timezone('Asia/Seoul')
+    current_time_kst = current_time_utc.astimezone(kst)
+    completion_time_kst = current_time_kst + timedelta(minutes=total_time)
+    st.session_state['completion_time'] = completion_time_kst
+    st.session_state['calculation_done'] = True  # Set calculation done to True
 
 # Countdown display
 countdown_container = st.empty()  # Create a placeholder for countdown

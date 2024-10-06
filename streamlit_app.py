@@ -47,6 +47,9 @@ if st.button('Calculate Delivery Completion Time'):
     st.session_state['completion_time'] = completion_time_kst
     st.success("Completion time calculated!")  # Optional feedback for the user
 
+# Countdown functionality
+countdown_container = st.empty()  # Create a placeholder for countdown
+
 # Chat functionality
 st.subheader('Chat Room')
 
@@ -69,28 +72,6 @@ def display_messages():
             message_placeholder.markdown(f"> {msg.strip()}")  # Show only the message content
     else:
         message_placeholder.markdown("No messages yet.")
-
-# Countdown functionality
-if 'completion_time' in st.session_state and st.session_state['completion_time'] is not None:
-    countdown_container = st.empty()
-    
-    current_time = datetime.now(pytz.timezone('Asia/Seoul'))
-    time_remaining = st.session_state['completion_time'] - current_time
-
-    if time_remaining.total_seconds() > 0:
-        hours, remainder = divmod(time_remaining.seconds, 3600)
-        minutes, seconds = divmod(remainder, 60)
-        countdown_container.markdown(f"""
-            <div style="font-size: 48px; text-align: center; color: #FF5733; font-weight: bold;">
-                I will be back in {hours:02}:{minutes:02}:{seconds:02}
-            </div>
-        """, unsafe_allow_html=True)
-    else:
-        countdown_container.markdown(f"""
-            <div style="font-size: 48px; text-align: center; color: #FF5733; font-weight: bold;">
-                I am back now!
-            </div>
-        """, unsafe_allow_html=True)
 
 # Admin functionality to reset messages
 st.subheader('Admin Control')
@@ -117,9 +98,37 @@ if st.button('Stop Message Refresh'):
 if 'refreshing' in st.session_state and st.session_state.refreshing:
     while True:
         current_time = time.time()
-        
+
         if current_time - st.session_state.last_update >= 5:  # Check every 5 seconds
             display_messages()  # Display the latest messages
             st.session_state.last_update = current_time  # Update the last update time
 
         time.sleep(1)  # Avoid tight loops
+
+# Countdown display
+if 'completion_time' in st.session_state and st.session_state['completion_time'] is not None:
+    current_time = datetime.now(pytz.timezone('Asia/Seoul'))
+    time_remaining = st.session_state['completion_time'] - current_time
+
+    if time_remaining.total_seconds() > 0:
+        hours, remainder = divmod(time_remaining.seconds, 3600)
+        minutes, seconds = divmod(remainder, 60)
+
+        # Calculate the KST completion time
+        completion_time_kst_str = st.session_state['completion_time'].strftime('%Y-%m-%d %H:%M:%S')
+        
+        # Display the countdown and the completion time
+        countdown_container.markdown(f"""
+            <div style="font-size: 48px; text-align: center; color: #FF5733; font-weight: bold;">
+                I will be back in {hours:02}:{minutes:02}:{seconds:02} (Completion Time: {completion_time_kst_str} KST)
+            </div>
+        """, unsafe_allow_html=True)
+    else:
+        countdown_container.markdown(f"""
+            <div style="font-size: 48px; text-align: center; color: #FF5733; font-weight: bold;">
+                I am back now!
+            </div>
+        """, unsafe_allow_html=True)
+
+# Initially display messages after countdown
+display_messages()  # Display messages right after countdown

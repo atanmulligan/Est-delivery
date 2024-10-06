@@ -32,6 +32,7 @@ if st.button('예상배달시간 계산', disabled=st.session_state['calculation
     completion_time_kst = current_time_kst + timedelta(minutes=total_time)
     st.session_state['completion_time'] = completion_time_kst
     st.session_state['calculation_done'] = True  # Set calculation done to True
+    st.rerun()
 
 # Countdown display
 countdown_container = st.empty()  # Create a placeholder for countdown

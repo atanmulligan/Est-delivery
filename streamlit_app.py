@@ -51,7 +51,7 @@ if isinstance(st.session_state['completion_time'], datetime):
             # Display the countdown in the desired format
             countdown_container.markdown(f"""
                 <div style="font-size: 48px; text-align: center; color: #FF5733; font-weight: bold;">
-                    I will be back in {hours:02}:{minutes:02}:{seconds:02} (HH:MM:SS)
+                    I will be back in {hours:02}:{minutes:02}:{seconds:02}
                 </div>
             """, unsafe_allow_html=True)
 

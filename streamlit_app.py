@@ -2,6 +2,7 @@ import streamlit as st
 from datetime import datetime, timedelta
 import pytz
 import os
+import time
 
 # File to store messages
 MESSAGE_FILE = 'messages.txt'
@@ -56,12 +57,18 @@ if st.button('Send'):
         write_message(message)  # Save message to file
         st.success("Message sent!")  # Optional feedback for the user
 
-# Display chat messages
-st.subheader('Messages')
-messages = read_messages()
-if messages:
-    for msg in messages:
-        st.markdown(f"> {msg.strip()}")
+# Placeholder for messages
+message_placeholder = st.empty()
+
+# Function to display messages
+def display_messages():
+    messages = read_messages()
+    message_placeholder.markdown("### Messages")
+    if messages:
+        for msg in messages:
+            message_placeholder.markdown(f"> {msg.strip()}")
+    else:
+        message_placeholder.markdown("No messages yet.")
 
 # Countdown functionality
 if 'completion_time' in st.session_state and st.session_state['completion_time'] is not None:
@@ -96,3 +103,23 @@ if st.button('Reset Messages'):
         st.success("Messages have been reset!")
     else:
         st.error("Incorrect password. Access denied.")
+
+# Automatically refresh messages every 5 seconds
+if st.button('Start Message Refresh'):
+    st.session_state.refreshing = True  # Start refreshing
+    st.session_state.last_update = time.time()  # Record the last update time
+
+# Stop refreshing messages
+if st.button('Stop Message Refresh'):
+    st.session_state.refreshing = False
+
+# Check and refresh messages
+if 'refreshing' in st.session_state and st.session_state.refreshing:
+    while True:
+        current_time = time.time()
+        
+        if current_time - st.session_state.last_update >= 5:  # Check every 5 seconds
+            display_messages()  # Display the latest messages
+            st.session_state.last_update = current_time  # Update the last update time
+
+        time.sleep(1)  # Avoid tight loops

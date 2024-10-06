@@ -42,10 +42,13 @@ if st.button('Calculate Delivery Completion Time'):
 
 # Chat functionality
 st.subheader('Chat Room')
+
+# Check for the message input and button press
 message = st.text_input("Type your message:")
 if st.button('Send'):
     if message:
         write_message(message)  # Save message to file
+        st.success("Message sent!")  # Optional feedback for the user
         st.experimental_rerun()  # Rerun to update chat display
 
 # Display chat messages

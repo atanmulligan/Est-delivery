@@ -38,6 +38,7 @@ if st.button('Calculate Delivery Completion Time'):
     current_time_kst = current_time_utc.astimezone(kst)
     completion_time_kst = current_time_kst + timedelta(minutes=total_time)
     st.session_state['completion_time'] = completion_time_kst
+    st.success("Completion time calculated!")  # Optional feedback for the user
 
 # Chat functionality
 st.subheader('Chat Room')
@@ -48,7 +49,7 @@ if st.button('Send'):
     if message:
         write_message(message)  # Save message to file
         st.success("Message sent!")  # Optional feedback for the user
-        st.experimental_rerun()  # Rerun to update chat display
+        # No need to call experimental_rerun here; simply re-display messages below
 
 # Display chat messages
 st.subheader('Messages')
